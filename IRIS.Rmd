@@ -1,0 +1,72 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+data("iris")
+colnames("iris")
+irisnum <- select((iris),Sepal.Length:Petal.Width)
+str(iris)
+summary(iris)
+cov(irisnum)
+cor(irisnum)
+```
+
+```{r ,fig.width=8, fig.height=8}
+plot(irisnum)
+```
+
+```{r}
+setosa<-subset(iris,Species=="setosa")
+setosa
+mean(setosa$Petal.Width)
+boxplot(irisnum$Sepal.Length)
+```
+
+```{r}
+qqnorm(irisnum[,"Sepal.Length"],main = "Sepal.Length")
+qqline(irisnum[,"Sepal.Length"])
+```
+
+```{r}
+x<-irisnum$Sepal.Width
+graficodenormalidad<-function(x)
+{
+  media<-mean(x)
+  dest<-sd(x)
+  hist(x,freq=F)
+  curve(dnorm(x,media,dest),add = T,col=2)
+  abline(v=media,col=2)
+}
+mean(x)
+sd(x)
+```
+
+```{r}
+graficodenormalidad(y)
+```
+
+```{r}
+ad.test(x)
+```
+```{r}
+jb.norm.test(x)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

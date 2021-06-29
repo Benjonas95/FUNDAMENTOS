@@ -1,0 +1,157 @@
+---
+title: "R Notebookk"
+output: html_notebook
+---
+```{r}
+data(wine,package="rattle")
+head(wine,4)
+```
+
+```{r}
+vinos<-wine
+
+```
+
+
+```{r}
+vinos$Magnesium=NULL
+vinos$Proline=NULL
+vinos$Alcalinity=NULL
+```
+
+
+```{r}
+vinosnocar<-vinos
+vinosnocar$Type=NULL
+vinosnocar$Malic=NULL
+vinosnocar$Ash=NULL
+vinosnocar$Nonflavanoids=NULL
+vinosnocar$Proanthocyanins=NULL
+vinosnocar$Color=NULL
+vinosnocar$Hue=NULL
+vinosnocar$Dilution=NULL
+head(vinosnocar,3)
+```
+
+
+```{r}
+##analizando cluster
+distancias01<-dist(vinosnocar)
+```
+
+```{r}
+fitHC<-hclust(distancias01,"ward.D2")
+```
+
+```{r}
+library(ggplot2)
+plot(fitHC)
+rect.hclust(fitHC,k=3,border = "blue")
+```
+
+```{r}
+#puntos de cluster
+clusterxy<-cutree(fitHC,3)
+clusterxy
+```
+
+```{r}
+data2<-data.frame(vinosnocar,clusterxy)
+plot(data2,col=clusterxy)
+head(data2,3)
+```
+
+```{r}
+plot(vinos,col=clusterxy)
+```
+
+```{r}
+clusplot(data2,clusterxy,main = "Representacion en 2D del analisis final de cluster",color=TRUE,shade = TRUE,lines = 1,labels = 2)
+```
+
+
+
+```{r}
+clusplot(vinos,clusterxy,main = "Representacion en 2D del analisis final de cluster",color=TRUE,shade = TRUE,lines = 0)
+```
+
+
+```{r}
+#analisis de los numeros de cluster
+k<-list()
+for (i in 1:10) {
+  k[[i]]<-kmeans(vinosnocar,i)
+}
+
+```
+
+```{r}
+betweens<-list()
+for (i in 1:10) {
+  betweens[[i]]<-k[[i]]$betweenss/k[[i]]$totss
+}
+```
+
+
+```{r}
+plot(1:10,betweens,"o")
+```
+
+
+```{r}
+for (i in 2:5) {
+  plot(vinosnocar,col=k[[i]]$cluster)
+}
+```
+
+
+```{r}
+#datos normalizados
+vinosnorm<-scale(vinosnocar)
+head(vinosnorm,5)
+```
+
+
+```{r}
+clusters2<-kmeans(vinosnorm,3)
+clusters2
+plot(vinosnocar,col=clusters2$cluster)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

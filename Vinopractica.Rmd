@@ -1,0 +1,80 @@
+---
+title: "Analisis de Vinoss"
+output: html_notebook
+---
+
+```{r}
+data(wine,package = "rattle")
+head(wine,4)
+```
+
+```{r}
+vinos<-wine
+vinos
+```
+
+```{r}
+vinos01 <- select((vinos),Type:Dilution)
+vinos01
+```
+
+```{r}
+#esto es para eliminar la columna que ya no necesito
+vinos$Proline=NULL
+attach(vinos)
+```
+
+```{r}
+library(car)
+plot(vinos)
+```
+
+```{r}
+library(car)
+plot(vinos)
+```
+
+```{r}
+boxplot(vinos)
+vinos2<-vinos
+vinos2$Magnesium = NULL
+vinos2$Alcalinity = NULL
+boxplot(vinos2)
+```
+
+
+```{r}
+boxplot(Alcohol,Type)
+boxplot(Flavanoids,Type)
+boxplot.default(Alcohol,Type)
+```
+
+```{r}
+qplot(Phenols,Flavanoids,size=2,aes(colour=Type))
+```
+
+```{r}
+qplot(Phenols,Flavanoids,color=Type,size=2)
+```
+
+```{r}
+qplot(Phenols,Flavanoids,color=Type,geom=c("point","smooth"))
+```
+
+
+```{r}
+ggplot(vinos)+
+  geom_point(aes(Phenols,Flavanoids,color=Type, size=Alcohol))+facet_grid(~Type,scales = "free")+geom_smooth(aes(Phenols,Flavanoids),method = "lm")
+```
+
+
+
+
+
+
+
+
+
+
+
+
