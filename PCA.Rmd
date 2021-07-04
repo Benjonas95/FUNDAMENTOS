@@ -1,0 +1,47 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(grid)
+library(FactoMineR)
+library(factoextra)
+```
+
+```{r}
+orange<-read.table("http://factominer.free.fr/book/orange.csv",header = TRUE,sep = ";",dec = ".",row.names = 1)
+str(orange)
+View(orange)
+```
+
+```{r}
+res.pca<-PCA(orange,quanti.sup=8:14,quali.sup=15:16)
+```
+
+```{r}
+res.pca$var
+```
+
+```{r}
+res.pca$ind$contrib
+fviz_contrib(res.pca,choice = "ind",axes = 1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
