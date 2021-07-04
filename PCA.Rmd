@@ -1,5 +1,5 @@
 ---
-title: "R Notebookk"
+title: "R Notebook"
 output: html_notebook
 ---
 
@@ -29,8 +29,27 @@ res.pca$ind$contrib
 fviz_contrib(res.pca,choice = "ind",axes = 1)
 ```
 
+```{r}
+res.pca$eig
+fviz_screeplot(res.pca,addlabels=TRUE,ylim=c(0,100))
+```
 
+```{r}
+round(res.pca$var$coord[,1:2],2)
 
+```
+
+```{r}
+fviz_contrib(res.pca,choice = "var",axes = 2)
+```
+
+```{r}
+fviz_pca_biplot(res.pca,geom = "text",invisible = "quanti.sup")+theme_gray()
+```
+
+```{r}
+fviz_pca_ind(res.pca,col.ind = "cos2")+scale_color_gradient2(low = "green",high = "red",midpoint = 0.75)+theme_dark()
+```
 
 
 

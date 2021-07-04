@@ -1,0 +1,51 @@
+```{r}
+#comando de IF Y ELSE
+c<-120
+if(c>=70)
+{print("Aprovado")}else if(c<70&&c>50){print("Reprobado")} else{print("Necesita Asesoria")}
+```
+```{r}
+#comando FOR Y WHILE
+pedidos<-c(5,3,7,2,555)
+for (k in 1:5) {
+  camisas<-pedidos[k]
+  costos<-camisas*120
+  print(costos)
+}
+```
+```{r}
+pedidos<-c(5,3,7,3,8)
+disponibles<-15
+k<-1
+while(disponibles!=0){
+  camisas<-pedidos[k]
+  costos<-camisas*120
+  print(costos)
+  k<-k+1
+  disponibles<-disponibles-camisas
+}
+```
+```{r}
+#comando de necxt y break
+prenda<-c("camisa","pantalon","saco","corbata")
+cantidad<-c(15,21,9,11)
+inventario<-data.frame(prenda,cantidad)
+inventario
+for (k in 1:4) {
+  if(prenda[k]!="saco"){
+    next
+  } else{
+    print(inventario[k,])
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+

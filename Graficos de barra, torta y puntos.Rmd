@@ -1,0 +1,124 @@
+```{r}
+datos<-read.csv("C:/Users/benja/Documents/R/Precios.csv")
+datos
+j<-ggplot(datos)
+j
+j <- j + aes(x =Petroleo, y = Dolar)
+j
+j<-j+geom_point(shape=23,size=1,colour="blue",alpha=0.9)
+j
+j <- j + xlab("Días transcurridos")
+j <- j + ylab("tasa de cambio de dolar")
+j<- j + ggtitle("Fluctuación del dólar", subtitle = "18/feb -
+31/may") 
+j
+```
+```{r}
+p <- p + aes(x =Petroleo, y = Dolar)
+p
+```
+
+```{r}
+n<-0
+z<-0
+if(n<10){
+  y<-n+1
+  z<-z+y
+  n<-n+1
+}
+z
+
+```
+```{r}
+d<-read.csv("C:/Users/benja/Documents/R/COVID19MX.csv")
+p<-ggplot(d)
+p<-p+aes(x=ENTIDAD,fill=HIPERTENSION)
+p<-p+geom_bar(width=0.4)
+p<-p+xlab("ENTIDADES FEDERATIVAS")
+p<-p+ylab("Numeros de Infectados")
+p<-p+ggtitle("DATOS COVID19",subtitle = "DE FEBRERO A JUNIO DE 2020")
+p
+r<-filter(d,ENTIDAD=="CIUDAD DE MEXICO")
+s<-ggplot(r)
+s<-s+aes(x=ENTIDAD,fill=DIABETES)
+s<-s+scale_fill_manual(values = c("red","blue"))
+s<-s+geom_bar(width = 0.5)
+s<-s+xlab("Entidades ferderativas")
+s<-s+ylab("Numero de infectados")
+s<-s+ggtitle("Datos del COVID19",subtitle = "febrero a junio de 2020")
+s<-s+coord_polar("y")
+s
+#r<-r + coord_polar("y")
+#NO DA EL CODIGOHASTA ESTE MOMENTO
+
+summary(d)
+summary(d$DIABETES)
+porcentaje<-c(15,85)
+estiquetas<-c("15%","85%")
+colores<-c("red","blue")
+pie(x=porcentaje, labels = estiquetas, col = colores,main = "Casos de diabetes/COVID19 en la ciudad de mexico")
+Categoria<-c("SI", "NO")
+legend("topright",legend = Categoria,fill=colores)
+```
+```{r}
+d<-read.csv("C:/Users/benja/Documents/R/COVID19MX.csv")
+p<-ggplot(d)
+p<-p+aes(x=EDAD,colour=SEXO)
+p<-p+geom_histogram(fill="green",binwidth = 4)
+p <- p +scale_color_manual(values = c('red','blue'))
+p<-p+xlab("Edad")
+p<-p+ylab("numeros de infectados")
+p<-p+ggtitle("Datos COVID19",subtitle = "febrero a junio de 2019")
+p
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

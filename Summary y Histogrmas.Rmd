@@ -1,0 +1,58 @@
+```{r}
+datos
+datos<-PlantGrowth
+datos
+summary(datos)
+indice <- order(datos$weight)
+datos[indice,]
+indice <- order(datos$weight, decreasing = TRUE)
+datos[indice,]
+```
+
+```{r}
+summary(datos)
+```
+```{r}
+peso<- datos$weight
+peso
+mean(peso)
+sd(peso)
+hist(peso)
+```
+
+```{r}
+indice <- order(datos$weight)
+
+```
+
+```{r}
+ventas<-c(210832.02,199047.71,20720.99,53155.01,11958.2,140985.02,147918.46,	36761.25,55586.07,55764.67,65655.08,184904.29)
+meses<-c("enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre")
+r<-data.frame(meses,ventas)
+r
+summary(r)
+V2<-r$ventas
+sd(V2)
+hist(V2)
+or<-order(r$ventas)
+r[or,]
+or<-order(r$ventas,decreasing = TRUE)
+r[or,]
+filter(r,meses=="diciembre")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

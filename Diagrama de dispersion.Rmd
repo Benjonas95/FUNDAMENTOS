@@ -1,0 +1,18 @@
+```{r}
+datos <- read.csv("C:/Users/benja/Documents/R/Precios.csv")
+datos
+p<-ggplot(datos)
+p
+p <- p + aes(x = Indice, y = Dolar)
+p
+p <- p + geom_line()
+p
+x<-ggplot(datos)
+x <- x + aes(x = Petroleo, y = Dolar)
+x <-x + geom_point()
+x
+```
+```{r}
+
+```
+

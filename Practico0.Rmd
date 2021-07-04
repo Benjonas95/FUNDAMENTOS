@@ -1,0 +1,64 @@
+---
+title: "R Notebook"
+output: html_notebook
+ ---
+
+
+```{r Plot Cars}
+plot(cars)
+```
+
+```{r Estructura de Dataframe}
+names(cars)
+str(cars)
+View(cars)
+```
+
+```{r prueba logica}
+x<-TRUE
+class(x)
+```
+
+
+```{r numerico a caracter}
+x<-5
+x<-as.character(x)
+class(x)
+```
+
+
+```{r numerico a logico}
+x<-44
+x<-as.logical(x)
+class(x)
+x
+```
+
+
+```{r}
+
+class(x) 
+```
+
+
+```{r}
+class(x)
+```
+
+
+```{r}
+x<-"produccion"
+class(x)
+```
+
+
+```{r}
+x<-5L
+class(x)
+```
+
+
+```{r graficas etiquetas}
+plot(cars, xlab = "Velocidad (mph)", ylab = "Distancia de frenado (ft)")
+```
+

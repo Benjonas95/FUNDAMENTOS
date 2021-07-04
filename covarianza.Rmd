@@ -1,0 +1,17 @@
+```{r}
+cost<-c(7.5,8.9,5.6,9.3,8.3,4.9)
+month<-c("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO")
+Excedent<-c(TRUE,TRUE,FALSE,TRUE,TRUE,FALSE)
+jr<-data.frame(month,Excedent,cost)
+jr
+write.csv(jr, "CostProduction.csv", row.names = FALSE)
+```
+```{r}
+jr <- read.csv("CostProduction.csv")
+jr$Excedent
+```
+```{r}
+
+filter(jr, cost !=8.9) 
+```
+
