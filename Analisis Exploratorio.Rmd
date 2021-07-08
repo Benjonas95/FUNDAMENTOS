@@ -1,0 +1,226 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+#Sistema de recomendacion de libros
+#Analisis exploratorio-Parte I
+#lEEMOS EL DATA FREAME
+```
+
+```{r message=FALSE,warning=FALSE,results='hide'}
+#install.packages("recommenderlab")
+#install.packages("dplyr")
+#install.packages("tidyr")
+#install.packages("ggplot2")
+#install.packages("string")
+#install.packages('DT')
+#install.packages('knitr')
+#install.packages('grid')
+#install.packages('gridExtra')
+#install.packages('corrplot')
+#install.packages('Matrix')
+
+library(recommenderlab)#incluye los algoritmos UBCF,IBCF,ETC
+library(data.table)
+library(dplyr)#permite con objetos Dataframe de manera rapida.Enfocada a texto
+library(tidyr)#manipular datos
+library(ggplot2)#Graficar
+library(stringr)#operaciones de texto\
+library(DT)#INTERFAZ PARA VISULIZAR DATATABLE
+library(knitr)#generar reportes
+library(grid)#graficos
+library(gridExtra)#graficas
+library(corrplot)#visulizar matrices de correlacion
+#library(qgraph)#graficas
+library(methods)#metodos y clases para objetos
+library(Matrix)#operaciones sobre matrices
+```
+
+```{r message=FALSE,warning=FALSE,results='hide'}
+book_tags<-fread('C:/Users/benja/Desktop/input/book_tags.csv')
+books<-fread('C:/Users/benja/Desktop/input/books.csv')
+ratings<-fread('C:/Users/benja/Desktop/input/ratings.csv')
+tags<-fread('C:/Users/benja/Desktop/input/tags.csv')
+```
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+
+###Damos una mirada a los conjuntos de datos {.tabsey}
+Primero tenemos que dar una mirada a los datos que nos han proporcionado. Estos consisten de los archivos : ratings.csv, book.csv, book_tags.csv,tags.csv
+
+ratings.csv contiene el puntaje que todo los usuarios han dado a los libros (un total de 980K para 10000 libros de 53424 usuarios)
+book.csv contiene mas informacion sobre los libros, tal como el autor,ano,etc.
+book_tags.csv contiene toda las etiquetas (tag_ids) que han sido asignado a sus libros y su correspondiente numero de etiquetas (tag_counts).
+tags.csv contiene los nombres correspondientes a las etiquetas (tag_ids).
+estos ultimos archivos estan ligados por los identificadores de los libros.
+
+###Ratings.csv
+```{r, results='asis', echo=FALSE}
+datatable(head(ratings,10),
+          class = "norwrap hover row-border",
+          options = list(dom="t",
+                         scrollx= FALSE,
+                         autowidth=TRUE))
+
+```
+
+```{r echo=FALSE}
+glimpse(ratings)
+
+```
+```{r, results='asis', echo=FALSE}
+datatable(head(books,5),
+          class = "norwrap hover row-border",
+          options = list(dom="t",
+                         scrollx= TRUE,
+                         autowidth=TRUE,
+                         columnDefs=list(list(width='200px',
+                                              targets=c(8)),
+                                         list(width='300px',
+                                              targets=c(10,11)))))
+
+```
+```{r}
+glimpse(books)
+```
+```{r,  result='asis', echo=FALSE}
+datatable(head(book_tags,10),
+          class = "norwrap hover row-border",
+          options = list(dom="t",
+                         scrollx= FALSE,
+                         autowidth=TRUE))
+```
+```{r}
+glimpse(book_tags)
+```
+
+```{r}
+datatable(sample_n(tags,10),
+          class = "norwrap hover row-border",
+          options = list(dom="t",
+                         scrollx= FALSE,
+                         autowidth=TRUE))
+
+```tag_id	tag_name
+1	2985	art-books-to-read
+2	29924	the-looking-glass-wars
+3	29709	the-chronos-files
+4	2756	ap-comp
+5	9641	dnf-ta
+6	31312	tudor-history
+7	14182	heart-pounding-action
+8	15179	i-own-this-book
+9	27167	sequel-to-a-time-to-kill
+10	24172	pre-teen-books
+```{r}
+glimpse(tags)
+```
+
+###limpieza de datos
+como cualquier conjuntos de datos en la vida real, primero necesitamos hacer una pequeña limpueza a los datos. Cuando realizamos la exploracion notamos que algunas combinaciones de usurios y libros tienen multiples puntajes cuando en teoeria solamente deberia haber uno por usuario
+removemos los registros de duplicados
+```{r}
+ratings[,N := .N, .(user_id, book_id)]
+cat('Number of duplicate ratings:' ,nrow(ratings[N>1]))
+ratings<-ratings[N==1]
+cat('\nNumber of duplicate ratings:',nrow(ratings[N>1]))
+```
+
+```{r}
+summary(ratings)
+```
+
+removemos aquellos usuarios que ha clasificado menos de 3 libros
+
+```{r}
+ratings[,N := .N, .(user_id)]
+cat('Numero de usuarios que clasificaron menos de 3 libros:',uniqueN(ratings[N<=2,user_id]))
+ratings<-ratings[N>2]
+```
+
+```{r}
+summary(ratings)
+```
+```{r}
+ratings%>%
+  ggplot(aes(x=rating,
+             fill=factor(rating)))+
+  geom_bar(color="grey20")+
+  scale_fill_brewer(palette = "YlGnBu")+
+  guides(fill= FALSE)
+```
+
+
+
+###Numero de calificaciones por Usurios
+podemos observas que hay usuarios que han dado muchas calificaciones. Esto es interesante porque podemos examinar como se comportan las calificaciones de los usuarios mas activos a los menos activos.
+
+```{r}
+ratings%>%
+  group_by(user_id)%>%
+  summarize(number_of_ratings_per_user = n())%>%
+  ggplot(aes(number_of_ratings_per_user))+
+  geom_bar(fill = "cadetBlue3",color = "grey20")+
+  coord_cartesian(c(3,50))
+
+```
+
+
+####Distribucion media de las calificaciones de los usuarios
+los usuarios tienen diferentes tendencias a calificar los libros. Algunos pueden dar 5 estrelllas a libros mediocres, mientras que otros no dan calificaciones de 5 a menos que sea un libro perfecto para ellos. Estas tendencias se pueden observar en la siguiente figuras. En el lado derecho hay un gran numero de usuarios con una calificacion media de 5, indicando que aquellos les gustaron todos los libros o solamente calificaron libros que le gustaron.
+tambien podemos observar que no hay calificaciones bajas. Estas tendencias seran importantes para el fitro colaborativo que veremos despues.
+```{r}
+ratings%>%
+  group_by(user_id)%>%
+  summarize(mean_user_rating=mean(rating))%>%
+  ggplot(aes(mean_user_rating))+
+  geom_histogram(fill="cadetblue3", color="grey20")
+```
+
+####numero de calificaciones por libro
+podemos ver que el subconjunto de libros tiene alrededor de 18 a 20 calificaciones
+```{r}
+ratings%>%
+  group_by(book_id)%>%
+  summarize(number_of_ratings_per_book = n())%>%
+  ggplot(aes(number_of_ratings_per_book)) + 
+  geom_bar(fill = "orange", color = "grey20" , with = 1) + coord_cartesian(c(0,40))
+```
+
+
+###Distribucion de la calificacion media de los libros
+la distribucion media no muestra ninguna pecularidad
+
+```{r}
+ratings%>%
+  group_by(book_id)%>%
+  summarize(mean_book_rating = mean(rating))%>%
+  ggplot(aes(mean_book_rating))+geom_histogram(fill = "orange", color="grey20") + coord_cartesian(c(1,5))
+```
+
+####Distribucion de generos
+Extraer el genero del libro no es una tarea trivial ya que los usurios asignan las etiquetas de los libros, el cual no podria coincidir por el genero establecido por GoodReads. Una forma de hacerlo es escoger las etiquetas que coincidan con las indicadas  por GoodReads.
+Se puede obervar que la mayoria de los libros son fantasias, romance o misterio, mientras que no muchos de cocina.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

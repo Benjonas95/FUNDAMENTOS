@@ -27,10 +27,10 @@ plot(redwine$ï..fixed.acidity ~ redwine$citric.acid)
 
 ```{r}
 vino6<-subset(redwine,quality==6)
-boxplot(vino6$ï..fixed.acidity)
+Boxplot(vino6$ï..fixed.acidity)
 abline(h=13,col=6)
 vino61<-filter(vino6,ï..fixed.acidity<12)
-boxplot(vino61$ï..fixed.acidity)
+Boxplot(vino61$ï..fixed.acidity)
 ```
 
 ```{r}
@@ -70,6 +70,8 @@ plotnormal(x)
 
 
 ```{r}
+library(normtest)
+library(nortest)
 ad.test(x)
 ```
 ```{r}
